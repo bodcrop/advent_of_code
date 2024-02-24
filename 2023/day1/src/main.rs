@@ -7,6 +7,7 @@ fn main() {
     q1(&rows);
     q2(&rows);
 }
+
 fn q1(rows: &Vec<&str>) {
     let mut calibration_sum_q1: u32 = 0;
     for row in rows {
@@ -29,15 +30,15 @@ fn q1(rows: &Vec<&str>) {
 
 fn q2(rows: &Vec<&str>) {
     let string_scalar_mapping = HashMap::from([
-        // ("one", 1),
-        // ("two", 2),
-        // ("three", 3),
-        // ("four", 4),
-        // ("five", 5),
-        // ("six", 6),
-        // ("seven", 7),
-        // ("eight", 8),
-        // ("nine", 9),
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
         ("1", 1),
         ("2", 2),
         ("3", 3),
@@ -49,12 +50,18 @@ fn q2(rows: &Vec<&str>) {
         ("9", 9),
     ]);
     let mut string_or_digit_sum = 0;
+
     for row in rows {
         let mut index_value = Vec::new();
         for key in string_scalar_mapping.keys() {
-            let index = row.find(key);
-            if index != None {
-                index_value.push((index.unwrap(), string_scalar_mapping[key]))
+            let l_index = row.find(key);
+            if l_index != None {
+                index_value.push((l_index.unwrap(), string_scalar_mapping[key]))
+            }
+
+            let r_index = row.rfind(key);
+            if r_index != None {
+                index_value.push((r_index.unwrap(), string_scalar_mapping[key]))
             }
         }
         index_value.sort_by(|a, b| a.0.cmp(&b.0));
