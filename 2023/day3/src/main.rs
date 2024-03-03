@@ -5,7 +5,7 @@ use std::usize;
 
 //TODO how to handle newlines as a character?
 fn main() {
-    let content = fs::read_to_string("src/test.txt").expect("Could not read input file");
+    let content = fs::read_to_string("src/input.txt").expect("Could not read input file");
     let content_rows: Vec<&str> = content.split("\n").collect::<Vec<&str>>();
     // q1(&content_rows);
     q2(&content_rows);
@@ -153,20 +153,34 @@ fn q2(content_rows: &Vec<&str>) {
                 }
             }
 
-            if found_number_neighbours.len() > 1 {
+            if found_number_neighbours.len() == 2 {
                 println!("Found * on location: {x_gear_location} on row {y}");
+                let mut gear_score = 1;
                 for neighbour in found_number_neighbours {
-                    println!(
-                        "Found number {} as a neighbour",
-                        content_rows[neighbour.2]
-                            .get(neighbour.0..neighbour.1)
-                            .unwrap()
-                    )
+                    let complete_number =
+                        get_compelete_number(neighbour.0, neighbour.1, content_rows[neighbour.2]);
+                    gear_score *= complete_number;
+                    println!("Complete number: {complete_number}");
                 }
+                total_score_v2 += gear_score
+            } else if found_number_neighbours.len() >= 2 {
+                println!("WARNING: Found * on location: {x_gear_location} on row {y}");
+            } else {
             }
         }
     }
+    println!("Q2: Total score equals {total_score_v2}")
 }
-fn get_compelete_number(start_location: usize, end_location: usize, row: &&str) -> i32 {
-    return 42;
+fn get_compelete_number(start_location: usize, end_location: usize, row: &str) -> i32 {
+    let r_find_digit: Regex = Regex::new(r"\d+").unwrap();
+    for digit_in_row in r_find_digit.find_iter(row) {
+        if digit_in_row.0 <= start_location && digit_in_row.1 >= end_location {
+            return row
+                .get(digit_in_row.0..digit_in_row.1)
+                .unwrap()
+                .parse::<i32>()
+                .unwrap();
+        }
+    }
+    return 0;
 }
